@@ -1,0 +1,457 @@
+:root {
+  --stepper-font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.stepper {
+  --stepper-active: #2563eb;
+  --stepper-complete: #16a34a;
+  --stepper-disabled: #9ca3af;
+  --stepper-text: #111827;
+  --stepper-muted: #6b7280;
+  --stepper-border: #e5e7eb;
+  --stepper-surface: #fff;
+
+  --stepper-connector: var(--stepper-border);
+  --stepper-connector-complete: var(--stepper-complete);
+
+  --stepper-size-sm: 24px;
+  --stepper-size-md: 32px;
+  --stepper-size-lg: 40px;
+
+  --stepper-indicator-size: var(--stepper-size-md);
+
+  --stepper-gap-sm: 8px;
+  --stepper-gap-md: 12px;
+  --stepper-gap-lg: 26px;
+
+  /* Effective gaps (depend on size) */
+  --stepper-gap: var(--stepper-gap-md);
+  --stepper-gap-between: calc(var(--stepper-gap-md) * 2);
+
+  --stepper-font-sm: 12px;
+  --stepper-font-md: 14px;
+  --stepper-font-lg: 16px;
+
+  font-family: var(--stepper-font);
+  color: var(--stepper-text);
+}
+
+.stepper--sm {
+  --stepper-indicator-size: var(--stepper-size-sm);
+  --stepper-gap: var(--stepper-gap-sm);
+  --stepper-gap-between: calc(var(--stepper-gap-sm) * 2);
+}
+
+.stepper--lg {
+  --stepper-indicator-size: var(--stepper-size-lg);
+  --stepper-gap: 0;
+  --stepper-gap-between: calc(var(--stepper-gap-lg) * 2);
+}
+
+.stepper__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+
+.stepper--horizontal .stepper__list {
+  align-items: flex-start;
+}
+
+.stepper--vertical .stepper__list {
+  flex-direction: column;
+  gap: var(--stepper-gap-between);
+}
+
+.stepper__step {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.stepper--horizontal .stepper__step {
+  min-width: 0;
+}
+
+.stepper__stepInner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto;
+  align-items: center;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.stepper--label-below.stepper--horizontal .stepper__stepInner {
+  position: relative;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  width: 100%;
+}
+
+.stepper__button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--stepper-gap-md);
+  min-width: 0;
+}
+
+.stepper--label-below.stepper--horizontal .stepper__button {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.stepper--label-below.stepper--horizontal .stepper__label {
+  text-align: center;
+}
+
+/* Explicit: Horizontal + label side (inline) */
+.stepper--label-side.stepper--horizontal .stepper__stepInner {
+  justify-items: start;
+  width: 100%;
+  padding-right: 5px;
+}
+
+.stepper--label-side.stepper--horizontal .stepper__button {
+  grid-template-columns: auto 1fr;
+  justify-items: start;
+}
+
+.stepper--label-side.stepper--horizontal .stepper__label {
+  text-align: left;
+}
+
+.stepper--label-below.stepper--vertical .stepper__stepInner {
+  position: relative;
+  grid-template-columns: 1fr;
+  justify-items: start;
+  width: 100%;
+}
+
+.stepper--label-below.stepper--vertical .stepper__button {
+  grid-template-columns: 1fr;
+  justify-items: start;
+  width: 100%;
+  gap: calc(var(--stepper-gap) * 0.75);
+}
+
+.stepper--label-below.stepper--vertical .stepper__label {
+  text-align: left;
+}
+
+.stepper--vertical.stepper--label-below .stepper__step,
+.stepper--vertical.stepper--label-side .stepper__step {
+  width: 100%;
+  flex: 1 1 0;
+}
+
+.stepper--vertical.stepper--label-below .stepper__step {
+  padding-left: var(--stepper-gap);
+}
+
+/*
+  Connector continuity modes:
+  - Horizontal + label below: draw connectors with step pseudo-elements so labels never create breaks.
+  - Vertical + label inline (side): draw connectors with step pseudo-elements so the line is continuous.
+*/
+
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__list {
+  gap: 0;
+}
+
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step {
+  position: relative;
+  padding: 0 var(--stepper-gap-md);
+  flex: 1 1 0;
+}
+
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step::before,
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--stepper-indicator-size) / 2);
+  height: 2px;
+  background: var(--stepper-connector);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step::before {
+  left: 0;
+  right: calc(50% + (var(--stepper-indicator-size) / 2));
+}
+
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step::after {
+  left: calc(50% + (var(--stepper-indicator-size) / 2));
+  right: 0;
+}
+
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step:first-child::before {
+  display: none;
+}
+
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step:last-child::after {
+  display: none;
+}
+
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step--passed::after {
+  background: var(--stepper-step-complete, var(--stepper-connector-complete));
+}
+
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step--passed + .stepper__step::before {
+  background: var(--stepper-connector-complete);
+}
+
+/* Skipped horizontal steps (label-below): mute adjacent connector segments */
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step--skipped::after {
+  background: var(--stepper-connector);
+}
+
+.stepper--continuity.stepper--label-below.stepper--horizontal .stepper__step--skipped + .stepper__step::before {
+  background: var(--stepper-connector);
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__list,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__list {
+  gap: 0;
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step {
+  position: relative;
+  padding: var(--stepper-gap-between) 0;
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step::before,
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step::after,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step::before,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--stepper-indicator-size) / 2);
+  width: 2px;
+  background: var(--stepper-connector);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__labelText {
+  background: var(--stepper-surface);
+  display: inline-block;
+  padding: 0 4px;
+  border-radius: 6px;
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step::before,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step::before {
+  top: 0;
+  bottom: calc(50% + (var(--stepper-indicator-size) / 2));
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step::after,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step::after {
+  top: calc(50% + (var(--stepper-indicator-size) / 2));
+  bottom: 0;
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step:first-child::before,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step:first-child::before {
+  display: none;
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step:last-child::after,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step:last-child::after {
+  display: none;
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step--passed::after,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step--passed::after {
+  background: var(--stepper-step-complete, var(--stepper-connector-complete));
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step--passed + .stepper__step::before,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step--passed + .stepper__step::before {
+  background: var(--stepper-connector-complete);
+}
+
+/* Skipped vertical steps: mute adjacent connector segments */
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step--skipped::after,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step--skipped::after {
+  background: var(--stepper-connector);
+}
+
+.stepper--continuity.stepper--vertical.stepper--label-side .stepper__step--skipped + .stepper__step::before,
+.stepper--continuity.stepper--vertical.stepper--label-below .stepper__step--skipped + .stepper__step::before {
+  background: var(--stepper-connector);
+}
+
+.stepper__button[aria-disabled='true'],
+.stepper__button:disabled {
+  cursor: not-allowed;
+}
+
+.stepper__indicator {
+  inline-size: var(--stepper-size-md);
+  block-size: var(--stepper-size-md);
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--stepper-border);
+  background: #fff;
+  color: var(--stepper-muted);
+  flex: 0 0 auto;
+  overflow: hidden;
+  line-height: 1;
+  font-size: calc(var(--stepper-indicator-size) * 0.5);
+}
+
+.stepper__indicator img,
+.stepper__indicator svg {
+  max-width: 70%;
+  max-height: 70%;
+  object-fit: contain;
+}
+
+.stepper--sm .stepper__indicator {
+  inline-size: var(--stepper-size-sm);
+  block-size: var(--stepper-size-sm);
+}
+
+.stepper--lg .stepper__indicator {
+  inline-size: var(--stepper-size-lg);
+  block-size: var(--stepper-size-lg);
+}
+
+.stepper__label {
+  text-align: left;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.stepper__labelText {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--stepper-font-md);
+  max-width: 100%;
+  line-height: normal;
+}
+
+.stepper--sm .stepper__labelText {
+  font-size: var(--stepper-font-sm);
+}
+
+.stepper--lg .stepper__labelText {
+  font-size: var(--stepper-font-lg);
+}
+
+.stepper__connector {
+  flex: 1 1 auto;
+  background: var(--stepper-connector);
+}
+
+.stepper__connector--completed {
+  background: var(--stepper-connector-complete);
+}
+
+.stepper__connectorSlot {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  position: relative;
+}
+
+.stepper--horizontal .stepper__connector {
+  block-size: 2px;
+}
+
+.stepper--vertical .stepper__connector {
+  inline-size: 2px;
+  min-height: 24px;
+}
+
+.stepper--vertical .stepper__connectorSlot {
+  min-height: 24px;
+}
+
+.stepper--vertical .stepper__connectorSlot > * {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--stepper-indicator-size) / 2);
+  transform: translateX(-50%);
+}
+
+.stepper__step--active .stepper__indicator {
+  border-color: var(--stepper-step-active, var(--stepper-active));
+  color: var(--stepper-step-active, var(--stepper-active));
+}
+
+.stepper__step--completed .stepper__indicator {
+  border-color: var(--stepper-step-complete, var(--stepper-complete));
+  background: var(--stepper-step-complete, var(--stepper-complete));
+  color: #fff;
+}
+
+.stepper__step--active.stepper__step--completed .stepper__indicator {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--stepper-step-active, var(--stepper-active)) 35%, transparent);
+}
+
+/* Skipped step indicator visuals */
+.stepper__step--skipped .stepper__indicator {
+  border-color: var(--stepper-border);
+  background: #f3f4f6;
+  color: var(--stepper-muted);
+}
+
+.stepper__step--disabled .stepper__indicator {
+  border-color: var(--stepper-border);
+  background: #f9fafb;
+  color: var(--stepper-disabled);
+}
+
+.stepper__step--active .stepper__labelText {
+  color: var(--stepper-step-active, var(--stepper-active));
+}
+
+.stepper__step--active.stepper__step--completed .stepper__labelText {
+  color: var(--stepper-step-active, var(--stepper-active));
+}
+
+.stepper__step--completed .stepper__labelText {
+  color: var(--stepper-text);
+}
+
+.stepper__step--disabled .stepper__labelText {
+  color: var(--stepper-disabled);
+}
+
+.stepper__srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.stepper__button:focus {
+  outline: 3px solid color-mix(in srgb, var(--stepper-active) 40%, transparent);
+  outline-offset: 4px;
+  border-radius: 8px;
+}

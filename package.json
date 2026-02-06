@@ -1,0 +1,51 @@
+{
+  "name": "react-stepper-lite",
+  "version": "1.0.0",
+  "description": "Lightweight React stepper component",
+  "keywords": [
+    "react",
+    "stepper",
+    "progress",
+    "ui",
+    "component",
+    "accessible"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prathmesh-jain/react-stepper-lite.git"
+  },
+  "homepage": "https://github.com/prathmesh-jain/react-stepper-lite#readme",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.mjs",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rollup": "rollup -c --bundleConfigAsCjs",
+    "build": "npm run rollup",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "@types/react": "^19.2.10",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.0",
+    "rollup-plugin-dts": "^6.3.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {}
+}
