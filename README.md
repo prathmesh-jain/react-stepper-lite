@@ -229,6 +229,21 @@ export function ColorsExample({ steps, activeStep }: { steps: { label: string }[
 }
 ```
 
+For strict CSP environments, prefer external CSS classes instead of inline `style`:
+
+```css
+.checkoutStepper {
+  --stepper-active: #2563eb;
+  --stepper-complete: #059669;
+  --stepper-connector: #d1d5db;
+  --stepper-connector-complete: #059669;
+}
+```
+
+```tsx
+<Stepper steps={steps} activeStep={activeStep} className="checkoutStepper" />
+```
+
 ### 7) `classNames` (optional)
 
 Use `classNames` to attach your own classes to internal elements.
@@ -256,6 +271,57 @@ export function ClassNamesExample() {
   )
 }
 ```
+
+## Styling contract
+
+Use this as a stable guide for customizing the component.
+
+`classNames` key to element mapping:
+
+- `root`: outer container. Use for global variables, width, spacing around the whole stepper.
+- `list`: the `<ol>` wrapper. Use for layout-level spacing/alignment of all steps.
+- `step`: each `<li>` step item. Use for per-step container spacing/positioning.
+- `stepInner`: inner step wrapper around button/label structure.
+- `stepButton`: clickable/focusable step button. Use for padding, hover, focus visuals.
+- `stepIndicator`: the circle/icon node. Use for size, border, bg, icon alignment.
+- `stepLabel`: label wrapper next to/below the indicator.
+- `connector`: connector line element between steps.
+- `activeStep`: extra class added when step is active.
+- `completedStep`: extra class added when step is completed.
+- `skippedStep`: extra class added when step is skipped.
+- `disabledStep`: extra class added when step is disabled.
+
+Built-in classes/state selectors you can target:
+
+- `.stepper--horizontal`: horizontal layout rules.
+- `.stepper--vertical`: vertical layout rules.
+- `.stepper--sm`, `.stepper--md`, `.stepper--lg`: size variants (indicator/typography/gaps).
+- `.stepper--label-below`: label-under-indicator layout.
+- `.stepper--label-side`: label-next-to-indicator layout.
+- `.stepper__step--active`: active step colors/label emphasis.
+- `.stepper__step--completed`: completed step indicator/label visuals.
+- `.stepper__step--passed`: step whose connector segment should look completed.
+- `.stepper__step--skipped`: skipped step muted visuals.
+- `.stepper__step--disabled`: disabled step visuals and tone.
+
+Quick example (what to edit for common needs):
+
+- Indicator size/border: target `classNames.stepIndicator` or `.stepper__indicator`.
+- Active label color: target `classNames.activeStep` with `.stepper__labelText`.
+- Connector thickness/color: target `classNames.connector` or `.stepper__connector`.
+- Disabled step tone: target `classNames.disabledStep`.
+
+CSS variables supported by default styles:
+
+- `--stepper-active`
+- `--stepper-complete`
+- `--stepper-connector`
+- `--stepper-connector-complete`
+- `--stepper-disabled`
+- `--stepper-text`
+- `--stepper-muted`
+- `--stepper-border`
+- `--stepper-surface`
 
 ## Styling notes
 
@@ -291,6 +357,17 @@ Most used props:
 - `skippedSteps?: number[]`
 - `disabled?: boolean`
 - `classNames?: StepperClassNames`
+
+## CSP guidance
+
+- CSP-safe default: component styling is class-based, with no internal inline style generation.
+- With default usage (`steps`, `activeStep`, optional orientation/size/labelPlacement), no inline style attributes are emitted by the library.
+- Recommended for strict CSP: theme via external CSS classes and CSS variables.
+- Inline styles are emitted only when user override props are passed:
+- `style` prop
+- root color override props (`color`, `stepColor`, `completedColor`, `completedStepColor`, `connectorColor`, `connectorCompletedColor`)
+- per-step overrides (`step.color`, `step.completedColor`)
+- If your CSP forbids inline styles, prefer className/classNames + external CSS variables.
 
 `StepConfig`:
 

@@ -322,6 +322,11 @@
   object-fit: contain;
 }
 
+.stepper__iconImage {
+  width: 1em;
+  height: 1em;
+}
+
 .stepper--sm .stepper__indicator {
   inline-size: var(--stepper-size-sm);
   block-size: var(--stepper-size-sm);

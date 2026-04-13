@@ -140,7 +140,7 @@ function isLikelyImageSrc(value: string) {
 function toIconNode(icon: StepConfig['icon']) {
   if (typeof icon === 'string') {
     if (isLikelyImageSrc(icon)) {
-      return <img src={icon} alt="" style={{ width: '1em', height: '1em' }} />
+      return <img src={icon} alt="" className="stepper__iconImage" />
     }
     return icon
   }
@@ -213,7 +213,9 @@ export function useStepperState(params: {
  *
  * Styling:
  * - By default it injects its CSS once (via the `import './stepper.css'` in the package entry).
- * - `color` / `completedColor` map to CSS variables `--stepper-active` and `--stepper-complete`.
+ * - Defaults are class/CSS-driven and CSP-safe (no internal inline style generation).
+ * - Inline styles are only generated when user-supplied override props are provided.
+ * - Consumers can always use className/classNames + external CSS variables to avoid inline styles.
  */
 export function Stepper(props: StepperProps) {
   const {
@@ -332,20 +334,33 @@ export function Stepper(props: StepperProps) {
     [activeIndex, states, orientation, focusStep, isClickable, onStepClick],
   )
 
-  const rootStyle: StepperStyle = {
-    ...(style as StepperStyle),
-    ...((stepColor ?? color) ? { ['--stepper-active']: stepColor ?? color } : null),
-    ...((completedStepColor ?? completedColor)
-      ? { ['--stepper-complete']: completedStepColor ?? completedColor }
-      : null),
-    ...(connectorColor ? { ['--stepper-connector']: connectorColor } : null),
-    ...((connectorCompletedColor ?? completedStepColor ?? completedColor)
+  const hasRootOverrideVars = Boolean(
+    (stepColor ?? color) ||
+      (completedStepColor ?? completedColor) ||
+      connectorColor ||
+      (connectorCompletedColor ?? completedStepColor ?? completedColor),
+  )
+
+  // CSP note:
+  // We avoid internal inline styles unless users explicitly pass override props.
+  // For strict CSP, prefer className/classNames with external CSS variables.
+  const rootStyle: StepperStyle | undefined =
+    style || hasRootOverrideVars
       ? {
-          ['--stepper-connector-complete']:
-            connectorCompletedColor ?? completedStepColor ?? completedColor,
+          ...(style as StepperStyle),
+          ...((stepColor ?? color) ? { ['--stepper-active']: stepColor ?? color } : null),
+          ...((completedStepColor ?? completedColor)
+            ? { ['--stepper-complete']: completedStepColor ?? completedColor }
+            : null),
+          ...(connectorColor ? { ['--stepper-connector']: connectorColor } : null),
+          ...((connectorCompletedColor ?? completedStepColor ?? completedColor)
+            ? {
+                ['--stepper-connector-complete']:
+                  connectorCompletedColor ?? completedStepColor ?? completedColor,
+              }
+            : null),
         }
-      : null),
-  }
+      : undefined
 
   const activeLabel = steps[activeIndex]?.label ?? ''
   const useCssContinuityConnectors =
