@@ -47,5 +47,12 @@
     "tslib": "^2.8.1",
     "typescript": "^5.9.3"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "exports": {
+  ".": {
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.js"
+  },
+  "./styles": "./dist/stepper.css"  
+}
 }

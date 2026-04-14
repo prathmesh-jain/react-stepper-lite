@@ -27,8 +27,12 @@ export default [
             peerDepsExternal(),
             resolve(),
             commonjs(),
+            postcss({
+                extract: "stepper.css",
+                minimize: true,
+                inject: false, // ensure no runtime injection
+            }),
             typescript({ tsconfig: "./tsconfig.build.json" }),
-            postcss(),
         ],
         external: ["react", "react-dom"],
     },

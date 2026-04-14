@@ -7,6 +7,7 @@ What you get:
 - **Good defaults**: works out of the box.
 - **Accessible**: roving focus + keyboard navigation.
 - **Easy to customize**: CSS variables, `classNames`, and per-step overrides.
+- **CSP-friendly styling**: CSS is shipped as a separate file (no runtime style-tag injection).
 
 ## Screenshots
 
@@ -34,6 +35,7 @@ Peer deps:
 ```tsx
 import { useState } from 'react'
 import { Stepper, type StepConfig } from 'react-stepper-lite'
+import 'react-stepper-lite/styles' // import once (e.g., app entry)
 
 const steps: StepConfig[] = [{ label: 'Login' }, { label: 'Address' }, { label: 'Payment' }]
 
@@ -45,6 +47,22 @@ export function Example() {
 ```
 
 `Stepper` is controlled: you own `activeStep`, and `onStepClick` is optional.
+
+## Styles import (required)
+
+From `v1.0.4`, library CSS is distributed as a separate file for CSP compatibility.
+
+Import styles once in your app:
+
+```tsx
+import 'react-stepper-lite/styles'
+```
+
+Why this change:
+
+- avoids runtime `<style>` injection
+- works better with strict CSP policies
+- gives explicit control over when/how styles are loaded
 
 ## Examples
 
@@ -325,7 +343,11 @@ CSS variables supported by default styles:
 
 ## Styling notes
 
-The default styles are plain CSS and are applied automatically.
+The default styles are plain CSS and are loaded when you import:
+
+```tsx
+import 'react-stepper-lite/styles'
+```
 
 If you prefer to bring your own styles:
 
@@ -360,8 +382,10 @@ Most used props:
 
 ## CSP guidance
 
-- CSP-safe default: component styling is class-based, with no internal inline style generation.
-- With default usage (`steps`, `activeStep`, optional orientation/size/labelPlacement), no inline style attributes are emitted by the library.
+- CSP-safe default:
+- styles are shipped as a separate CSS file (`react-stepper-lite/styles`)
+- no runtime style-tag injection is used
+- with default usage (`steps`, `activeStep`, optional orientation/size/labelPlacement), no inline style attributes are emitted by the component
 - Recommended for strict CSP: theme via external CSS classes and CSS variables.
 - Inline styles are emitted only when user override props are passed:
 - `style` prop
