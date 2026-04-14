@@ -24,7 +24,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "rollup": "rollup -c --bundleConfigAsCjs",
-    "build": "npm run rollup",
+    "build": "npm run rollup && npm run postbuild",
+    "postbuild": "echo \"declare module 'react-stepper-lite/styles' {}\" > dist/styles.d.ts",
     "prepack": "npm run build"
   },
   "peerDependencies": {
@@ -54,6 +55,9 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
-    "./styles": "./dist/stepper.css"
+    "./styles": {
+      "types": "./dist/styles.d.ts",
+      "default": "./dist/stepper.css"
+    }
   }
 }
