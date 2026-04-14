@@ -50,7 +50,7 @@ export function Example() {
 
 ## Styles import (required)
 
-From `v1.0.4`, library CSS is distributed as a separate file for CSP compatibility.
+From `v1.0.5`, library CSS is distributed as a separate file for CSP compatibility.
 
 Import styles once in your app:
 
