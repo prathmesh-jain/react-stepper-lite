@@ -1,6 +1,6 @@
 {
   "name": "react-stepper-lite",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Lightweight React stepper component",
   "keywords": [
     "react",
@@ -49,11 +49,11 @@
   },
   "dependencies": {},
   "exports": {
-  ".": {
-    "types": "./dist/index.d.ts",
-    "import": "./dist/index.mjs",
-    "require": "./dist/index.js"
-  },
-  "./styles": "./dist/stepper.css"  
-}
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./styles": "./dist/stepper.css"
+  }
 }
